@@ -14,3 +14,12 @@ class PostSerializer(serializers.ModelSerializer):
 
   #title = serializers.CharField(max_length=200)
   #content = serializers.CharField(max_length=200)
+
+class PostUpdateCreateSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Post
+    fields = [
+      'title',
+      'content',
+      'image',
+    ]  
