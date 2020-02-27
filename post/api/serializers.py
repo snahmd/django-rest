@@ -6,7 +6,10 @@ class PostSerializer(serializers.ModelSerializer):
     model = Post
     fields = [
       'title',
-      'content'
+      'content',
+      'image',
+      'slug',
+      'created',
     ]
 
   #title = serializers.CharField(max_length=200)
