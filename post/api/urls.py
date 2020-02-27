@@ -1,6 +1,7 @@
 from django.urls import path, include
-from post.api.views import PostListAPIView
+from post.api.views import PostListAPIView, PostDetailAPIView
 
 urlpatterns = [
-    path('list', PostListAPIView.as_view(), name='list')
+    path('list', PostListAPIView.as_view(), name='list'),
+    path('detail/<slug>', PostDetailAPIView.as_view(), name='detail')
 ]
