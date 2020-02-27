@@ -23,6 +23,10 @@ class Post(models.Model):
       number += 1
     return unique
 
+
+  def __str__(self):
+    return self.title
+
   def save(self, *args, **kwargs):
     if not self.id:
       self.created = timezone.now()
