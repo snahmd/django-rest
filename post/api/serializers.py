@@ -5,6 +5,7 @@ class PostSerializer(serializers.ModelSerializer):
   class Meta:
     model = Post
     fields = [
+      'user',
       'title',
       'content',
       'image',
