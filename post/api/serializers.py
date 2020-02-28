@@ -11,6 +11,7 @@ class PostSerializer(serializers.ModelSerializer):
       'image',
       'slug',
       'created',
+      'modified_by',
     ]
 
   #title = serializers.CharField(max_length=200)
