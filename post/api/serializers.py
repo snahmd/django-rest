@@ -25,3 +25,23 @@ class PostUpdateCreateSerializer(serializers.ModelSerializer):
       'content',
       'image',
     ]  
+
+  #def create(self, validated_data):
+  #  return Post.objects.create(user = self.context["request"].user, **validated_data)
+
+  def update(self, instance, validated_data):
+    instance.title = validated_data.get('title', instance.title)
+    instance.content = validated_data.get('content', instance.title)
+    instance.image = validated_data.get('image', instance.title)
+    instance.save()
+    return instance
+
+  #def validate_title(self, value):
+  #  if value == "oguzhan":
+  #    raise serializers.ValidationError("Bu değer olmaz.")
+  #  return value  
+
+  def validate(self, attrs):
+    if attrs["title"] == "ahmed":
+      raise serializers.ValidationError("olmaz")
+    return attrs
