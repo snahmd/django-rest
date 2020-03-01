@@ -3,7 +3,7 @@ from rest_framework.generics import (ListAPIView,
                                      DestroyAPIView, 
                                      RetrieveUpdateAPIView, 
                                      CreateAPIView,)
-
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from post.api.permissions import IsOwner
 
@@ -12,8 +12,14 @@ from post.api.serializers import PostSerializer, PostUpdateCreateSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 class PostListAPIView(ListAPIView): 
-  queryset = Post.objects.all()
+  #queryset = Post.objects.all()
   serializer_class = PostSerializer
+  filter_backends = [SearchFilter, OrderingFilter]
+  search_fields = ['title', 'content']
+
+  def get_queryset(self):
+    queryset = Post.objects.filter(draft=False)
+    return queryset
   
 
 class PostDetailAPIView(RetrieveAPIView):
