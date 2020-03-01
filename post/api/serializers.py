@@ -2,6 +2,11 @@ from rest_framework import serializers
 from post.models import Post
 
 class PostSerializer(serializers.ModelSerializer):
+  url = serializers.HyperlinkedIdentityField(
+    view_name = 'post:detail',
+    lookup_field = 'slug'
+    #view_name='namespace:name'
+  )
   class Meta:
     model = Post
     fields = [
@@ -9,7 +14,7 @@ class PostSerializer(serializers.ModelSerializer):
       'title',
       'content',
       'image',
-      'slug',
+      'url',
       'created',
       'modified_by',
     ]
@@ -18,6 +23,7 @@ class PostSerializer(serializers.ModelSerializer):
   #content = serializers.CharField(max_length=200)
 
 class PostUpdateCreateSerializer(serializers.ModelSerializer):
+  
   class Meta:
     model = Post
     fields = [
