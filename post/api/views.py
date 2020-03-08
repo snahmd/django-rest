@@ -3,6 +3,7 @@ from rest_framework.generics import (ListAPIView,
                                      DestroyAPIView, 
                                      RetrieveUpdateAPIView, 
                                      CreateAPIView,)
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, DestroyModelMixin
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from post.api.paginations import PostPagination
@@ -12,7 +13,7 @@ from post.models import Post
 from post.api.serializers import PostSerializer, PostUpdateCreateSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-class PostListAPIView(ListAPIView): 
+class PostListAPIView(ListAPIView, CreateModelMixin): 
   #queryset = Post.objects.all()
   serializer_class = PostSerializer
   filter_backends = [SearchFilter, OrderingFilter]
@@ -22,6 +23,12 @@ class PostListAPIView(ListAPIView):
   def get_queryset(self):
     queryset = Post.objects.filter(draft=False)
     return queryset
+
+  def post(self, request, *args, **kwargs):
+    return self.create(request, *args, **kwargs)  
+
+  def perform_create(self, serializer):
+    serializer.save(user = self.request.user)  
   
 
 class PostDetailAPIView(RetrieveAPIView):
@@ -37,7 +44,7 @@ class PostDeleteAPIView(DestroyAPIView):
   permission_classes = [IsOwner]
 
 
-class PostUpdateAPIView(RetrieveUpdateAPIView):
+class PostUpdateAPIView(RetrieveUpdateAPIView, DestroyModelMixin):
   queryset = Post.objects.all()
   serializer_class = PostUpdateCreateSerializer
   lookup_field = 'slug'
@@ -46,10 +53,16 @@ class PostUpdateAPIView(RetrieveUpdateAPIView):
   def perform_update(self,serializer):
     serializer.save(modified_by = self.request.user)
 
-class PostCreateAPIView(CreateAPIView):
+  def delete(self, request, *args, **kwargs):
+    return self.destroy(request, *args, **kwargs)  
+
+class PostCreateAPIView(CreateAPIView, ListModelMixin):
   queryset = Post.objects.all()
   serializer_class = PostUpdateCreateSerializer
   permission_classes = [IsAuthenticated]
   
+  def get(self, request, *args, **kwargs):
+    return self.list(request, *args, **kwargs)
+
   def perform_create(self,serializer):
     serializer.save(user = self.request.user)
